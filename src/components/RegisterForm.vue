@@ -87,35 +87,44 @@ export default {
     name: 'RegisterForm',
     data() {
         return {
-                  schema: {
-          name: 'required|min:3|max:100|alpha_spaces',
-          email: 'required|min:3|max:100|email',
-          age: 'required|min_value:18|max_value:100',
-          password: 'required|min:2|max:10|',
-          confirm_password: 'passwords_mismatch:@password',
-          country: 'required|country_excluded:China',
-          tos: 'tos',
-      },
-      userData: {
-        country: 'USA',
-      },
-      reg_in_submission: false,
-      reg_show_alert: false,
-      reg_alert_variant: 'bg-blue-600',
-      reg_alert_message: 'Please wait! Your account is being createing.',
-
+            schema: {
+                name: 'required|min:3|max:100|alpha_spaces',
+                email: 'required|min:3|max:100|email',
+                age: 'required|min_value:18|max_value:100',
+                password: 'required|min:6|max:10|',
+                confirm_password: 'passwords_mismatch:@password',
+                country: 'required|country_excluded:China',
+                tos: 'tos',
+            },
+            userData: {
+                country: 'USA',
+            },
+            reg_in_submission: false,
+            reg_show_alert: false,
+            reg_alert_variant: 'bg-blue-600',
+            reg_alert_message: 'Please wait! Your account is being created.',
         };
     },
     methods: {
-        register(values) {
-        this.reg_show_alert = true;
-        this.reg_in_submission = true;
-        this.reg_alert_variant = 'bg-blue-600';
-        this.reg_alert_message = 'Please wait! Your account is being createing.';
+        async register(values) {
+            this.reg_show_alert = true;
+            this.reg_in_submission = true;
+            this.reg_alert_variant = 'bg-blue-600';
+            this.reg_alert_message = 'Please wait! Your account is being created.';
 
-        this.reg_alert_variant = 'bg-green-600';
-        this.reg_alert_message = 'Success! Your account is been created.';
-        console.log(values);
+            try {
+             await this.$store.dispatch('register', values);
+            } catch (error) {
+                this.reg_in_submission = false;
+                this.reg_alert_variant = 'bg-red-600';
+                this.reg_alert_message = error.message;
+                // this.reg_alert_message = 'An unexpected error occurred. Please try again later.';
+                // throw error;
+                return;
+            }
+
+            this.reg_alert_variant = 'bg-green-600';
+            this.reg_alert_message = 'Success! Your account has been created.';
         },
     },
 };

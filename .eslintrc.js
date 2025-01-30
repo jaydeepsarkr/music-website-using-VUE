@@ -19,6 +19,8 @@ rules: {
   'no-trailing-spaces': 'off', // Disables trailing spaces rule
    'jsx-a11y/label-has-associated-control': 'off', // Disables label association rule
   'vuejs-accessibility/label-has-for': 'off', // For Vue accessibility rules
+  // quotes: 'off',
+
 },
   overrides: [
     {

@@ -47,15 +47,25 @@ export default {
        };
     },
     methods: {
-    login(values) {
+    async login(values) {
         this.login_in_submission = true;
         this.login_show_alert = true;
         this.login_alert_variant = 'bg-blue-600';
         this.login_alert_message = 'Please wait! We are logging you in.';
 
+        try {
+          await this.$store.dispatch('login', values);
+        } catch (e) {
+          this.login_show_alert = true;
+          this.login_alert_variant = 'bg-red-600';
+          this.login_alert_message = 'Error: Invalid email or password';
+          this.login_in_submission = false;
+          throw e;
+        }
+
          this.login_alert_variant = 'bg-green-600';
          this.login_alert_message = 'Login successful!';
-      console.log(values);
+         console.log(values);
     },
     },
 };
