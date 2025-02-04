@@ -40,7 +40,7 @@ export default createStore({
 
 async login({ commit }, payload) {
   const loginAuth = getAuth(); // Initialize the auth instance
-  await signInWithEmailAndPassword(loginAuth, payload.email, payload.password); // Use modular signInWithEmailAndPassword
+  await signInWithEmailAndPassword(loginAuth, payload.email, payload.password);
   commit('toggleAuth');
 },
 
@@ -49,7 +49,15 @@ async login({ commit }, payload) {
       if (user) {
         commit('toggleAuth');
       }
-     },
+    },
+
+    async signout({ commit }) {
+  await auth.signOut();
+      commit('toggleAuth');
+      //   if (payload.route.meta.requiresAuth) {
+      //   payload.router.push({ name: 'home' });
+      // }
+    },
   },
 
 });

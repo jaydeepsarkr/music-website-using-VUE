@@ -32,6 +32,7 @@
 </template>
 
 <script>
+
 export default {
     name: 'LoginForm',
     data() {
@@ -65,7 +66,8 @@ export default {
 
          this.login_alert_variant = 'bg-green-600';
          this.login_alert_message = 'Login successful!';
-         console.log(values);
+
+          window.location.reload();
     },
     },
 };

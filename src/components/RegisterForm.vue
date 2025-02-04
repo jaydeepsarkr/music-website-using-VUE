@@ -125,6 +125,8 @@ export default {
 
             this.reg_alert_variant = 'bg-green-600';
             this.reg_alert_message = 'Success! Your account has been created.';
+
+            window.location.reload();
         },
     },
 };
