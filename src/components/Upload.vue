@@ -21,15 +21,23 @@
       >
         <h5>Drop your files here</h5>
       </div>
+      <label for="fileUpload"></label>
+      <input type="file" id="fileUpload" multiple @change="upload($event)" />
+
       <hr class="my-6" />
 
       <!-- Progress Bars -->
       <div v-for="(file, index) in uploads" :key="index" class="mb-4">
         <!-- File Name -->
-        <div class="font-bold text-sm">{{ file.name}}</div>
+        <div class="font-bold text-sm"><i :class="icon"></i>{{ file.name}}</div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
           <!-- Inner Progress Bar -->
-          <div class="progress-bar bg-blue-400 transition-all" :style="{ width: file.progress + '%' }"></div>
+          <div class="progress-bar transition-all"
+            :class="{
+              'bg-blue-400': file.status === 'success',
+              'bg-red-400': file.status === 'failed',
+            }"
+            :style="{ width: file.progress + '%' }"></div>
         </div>
       </div>
     </div>
@@ -38,13 +46,16 @@
 
 <script>
 import supabase from '@/includes/supabase';
+import { auth, songsCollection } from '@/includes/firebase';
+import { addDoc } from 'firebase/firestore';
 
 export default {
   name: 'Upload',
   data() {
     return {
       is_dragover: false,
-      uploads: [], // Track multiple files
+      uploads: [],
+      icon: '',
     };
   },
   methods: {
@@ -60,10 +71,12 @@ export default {
     async upload($event) {
       this.is_dragover = false;
 
-      const files = [...$event.dataTransfer.files];
+      const files = $event.dataTransfer
+        ? [...$event.dataTransfer.files]
+        : [...$event.target.files];
       files.forEach(async (file, fileIndex) => {
         if (file.type !== 'audio/mpeg') {
-          console.log('Only MP3 files are allowed.', `The number ${fileIndex + 1} is not a valid file type`);
+          console.log('Only MP3 files are allowed.', ` ${fileIndex + 1} is not a valid file type`);
           return;
         }
 
@@ -76,11 +89,44 @@ export default {
         const { data, error } = await supabase.storage.from('songs').upload(`songs/${file.name}`, file);
 
         if (error) {
-          console.error('Error uploading file:', error.message || error);
-        } else {
-          this.uploads[index].progress = 10; // Start progress
-          this.simulateProgress(index);
-          console.log('File uploaded successfully:', data);
+          this.uploads[index].status = 'failed';
+          this.uploads[index].progress = 100;
+          console.error('Error uploading file to Supabase:', error ? error.message : 'Unknown error');
+          return;
+        }
+
+        this.icon = 'fas fa-spinner fa-spin';
+        this.uploads[index].status = 'success';
+        this.uploads[index].progress = 10; // Start progress
+        this.simulateProgress(index);
+        console.log('File uploaded to Supabase successfully:', data);
+
+        // Get the file URL from Supabase
+        const { data: urlData } = supabase.storage.from('songs').getPublicUrl(`songs/${file.name}`);
+        const fileUrl = urlData.publicUrl;
+
+        // Ensure the user is authenticated
+        if (!auth.currentUser) {
+          console.error('User is not authenticated');
+          return;
+        }
+
+        // Store metadata in Firebase Firestore
+        const song = {
+          uid: auth.currentUser.uid,
+          display_name: auth.currentUser.displayName,
+          original_name: file.name,
+          modified_name: file.name,
+          genre: '',
+          comment_count: 0,
+          url: fileUrl, // Store the Supabase file URL in Firebase
+        };
+
+        try {
+         await addDoc(songsCollection, song);
+          console.log('File metadata stored in Firebase:', song);
+        } catch (err) {
+          console.error('Error storing song data in Firebase:', err ? err.message : 'Unknown error');
         }
       });
     },

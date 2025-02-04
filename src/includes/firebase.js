@@ -15,10 +15,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const usersCollection = collection(db, 'users'); 
+const usersCollection = collection(db, 'users');
+const songsCollection = collection(db, 'songs');
 export {
   app,
   auth,
   db,
   usersCollection,
+  songsCollection,
 };
