@@ -9,7 +9,7 @@
       <div
         class="w-full px-10 py-20 rounded text-center cursor-pointer border border-dashed
           border-gray-400 text-gray-400 transition duration-500 hover:text-green-800
-          hover:border-green-400 hover:border-solid"
+          hover:border-green-400 hover:border-solid mb-6"
         :class="{ 'bg-green-400 border-green-400 border-solid': is_dragover }"
         @drag.prevent.stop=""
         @dragstart.prevent.stop=""
@@ -21,11 +21,17 @@
       >
         <h5>Drop your files here</h5>
       </div>
-      <label for="fileUpload"></label>
-      <input type="file" id="fileUpload" multiple @change="upload($event)" />
-
+      <label for="fileUpload" class="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer ">
+        Choose Files
+      </label>
+      <input
+        type="file"
+        id="fileUpload"
+        class="hidden"
+        multiple
+        @change="upload($event)"
+      />
       <hr class="my-6" />
-
       <!-- Progress Bars -->
       <div v-for="(file, index) in uploads" :key="index" class="mb-4">
         <!-- File Name -->
@@ -92,6 +98,7 @@ export default {
           this.uploads[index].status = 'failed';
           this.uploads[index].progress = 100;
           console.error('Error uploading file to Supabase:', error ? error.message : 'Unknown error');
+          this.icon = 'fas fa-times';
           return;
         }
 
@@ -99,6 +106,9 @@ export default {
         this.uploads[index].status = 'success';
         this.uploads[index].progress = 10; // Start progress
         this.simulateProgress(index);
+        setTimeout(() => {
+          this.icon = 'fas fa-check';
+          }, 5000); // 5 seconds delay
         console.log('File uploaded to Supabase successfully:', data);
 
         // Get the file URL from Supabase
