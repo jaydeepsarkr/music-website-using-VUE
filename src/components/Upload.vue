@@ -123,6 +123,7 @@ export default {
 
         // Store metadata in Firebase Firestore
         const song = {
+          id: data.id,
           uid: auth.currentUser.uid,
           display_name: auth.currentUser.displayName,
           original_name: file.name,
