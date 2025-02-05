@@ -45,7 +45,7 @@
 
 <script>
 import { songsCollection } from '@/includes/firebase';
-import { updateDoc, doc } from 'firebase/firestore';
+import { updateDoc, doc, deleteDoc } from 'firebase/firestore';
 // import supabase from '@/includes/supabase';
 
 export default {
@@ -100,7 +100,18 @@ export default {
         this.alert_message = 'Song info updated successfully!';
       }
     },
-    // async deleteSong() {},
-  },
+     async deleteSong() {
+        try {
+    // Delete song metadata from Firebase
+    const songRef = doc(songsCollection, this.song.docID);
+    await deleteDoc(songRef);
+
+    console.log('Song metadata deleted from Firebase successfully');
+  } catch (error) {
+    console.error('Error deleting song from Firebase:', error);
+  }
+},
+     },
+  
 };
 </script>
