@@ -40,7 +40,13 @@
 
 <script>
 import { songsCollection } from '@/includes/firebase';
-import { getDocs } from 'firebase/firestore'; // Make sure to import getDocs
+import {
+  getDocs,
+ orderBy,
+  query,
+   startAfter,
+    limit,
+    } from 'firebase/firestore';
 import AppSongItem from '@/components/SongItem.vue';
 
 export default {
@@ -51,17 +57,67 @@ export default {
   data() {
     return {
       songs: [],
+      lastDoc: null,
+      isFetching: false,
+      maxPerPage: 20,
     };
   },
   async created() {
-    try {
-      const snapshots = await getDocs(songsCollection); // Fetching the data using getDocs
-      snapshots.forEach((document) => {
-        this.songs.push({ docID: document.id, ...document.data() });
-      });
-    } catch (error) {
-      console.error('Error fetching songs:', error);
-    }
+    await this.fetchSongs(); // Load initial songs
+    window.addEventListener('scroll', this.handleScroll); // Listen for scrolling
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
+  methods: {
+    async fetchSongs() {
+      if (this.isFetching) return; // Prevent multiple requests
+      this.isFetching = true;
+
+      try {
+        let songQuery = query(
+          songsCollection,
+          orderBy('modified_name'),
+          limit(this.maxPerPage),
+        );
+
+        if (this.lastDoc) {
+          songQuery = query(
+            songsCollection,
+            orderBy('modified_name'),
+            startAfter(this.lastDoc),
+            limit(this.maxPerPage),
+          );
+        }
+
+        const snapshots = await getDocs(songQuery);
+
+        if (!snapshots.empty) {
+          const newSongs = snapshots.docs.map((doc) => ({
+            docID: doc.id,
+            ...doc.data(),
+          }));
+
+          this.songs = [...this.songs, ...newSongs];
+
+          // Update lastDoc for pagination
+          this.lastDoc = snapshots.docs[snapshots.docs.length - 1];
+        } else {
+          console.log('No more songs to load.');
+        }
+      } catch (error) {
+        console.error('Error fetching songs:', error);
+      } finally {
+        this.isFetching = false;
+      }
+    },
+
+    handleScroll() {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+      if (scrollTop + clientHeight >= scrollHeight - 50) {
+        this.fetchSongs(); // Fetch more songs when reaching bottom
+      }
+    },
   },
 };
 </script>
