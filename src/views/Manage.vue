@@ -1,3 +1,4 @@
+<!-- eslint-disable no-alert -->
 <template>
   <!-- Main Content -->
   <section class="container mx-auto mt-6">
@@ -15,7 +16,8 @@
             <composition-item v-for="(song,i) in songs" :key="song.docID" :song="song"
             :updateSong="updateSong"
             :index="i"
-            :removeSong="removeSong"/>
+            :removeSong="removeSong"
+            :updateUnsavedFlag="updateUnsavedFlag"/>
           </div>
         </div>
       </div>
@@ -38,6 +40,7 @@ export default {
   data() {
     return {
       songs: [],
+      unsavedFlag: false,
     };
   },
   async created() {
@@ -70,6 +73,18 @@ export default {
     addSong(song) {
       this.songs.push(song);
     },
+    updateUnsavedFlag(value) {
+      this.unsavedFlag = value;
+    },
   },
+  beforeRouteLeave(to, from, next) {
+    if (!this.updateUnsavedFlag) {
+      next();
+    } else {
+      // eslint-disable-next-line no-restricted-globals
+      const leave = confirm('Are you sure you want to leave?');
+      next(leave);
+    }
+   },
 };
 </script>

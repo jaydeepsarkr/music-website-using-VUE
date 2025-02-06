@@ -21,7 +21,8 @@
                     <vee-field type="text" name="modified_name"
                       class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300
                         transition duration-500 focus:outline-none focus:border-black rounded"
-                      placeholder="Enter Song Title" />
+                      placeholder="Enter Song Title"
+                      @input="updateUnsavedFlag(true)"/>
                       <ErrorMessage class="text-red-600"  name="modified_name"/>
                   </div>
                   <div class="mb-3">
@@ -29,7 +30,8 @@
                     <vee-field type="text" name="genre"
                       class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300
                         transition duration-500 focus:outline-none focus:border-black rounded"
-                      placeholder="Enter Genre" />
+                      placeholder="Enter Genre"
+                       @input="updateUnsavedFlag(true)" />
                       <ErrorMessage class="text-red-600" name="genre"/>
                   </div>
                   <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600" :disabled="in_submission">
@@ -72,6 +74,9 @@ export default {
       type: Function,
       required: true,
     },
+    updateUnsavedFlag: {
+      type: Function,
+    },
   },
   data() {
     return {
@@ -104,53 +109,54 @@ export default {
         return;
       } finally {
         this.updateSong(this.index, values);
+        this.updateUnsavedFlag(false);
         this.in_submission = false;
         this.alert_variant = 'bg-green-500';
         this.alert_message = 'Song info updated successfully!';
       }
     },
-async deleteSong() {
-  try {
-    const songUrl = this.song.url;
-    const filePath = decodeURIComponent(songUrl.split('/storage/v1/object/public/')[1]);
-    console.log('Extracted file path:', filePath);
+      async deleteSong() {
+        try {
+          const songUrl = this.song.url;
+          const filePath = decodeURIComponent(songUrl.split('/storage/v1/object/public/')[1]);
+          console.log('Extracted file path:', filePath);
 
-    if (!filePath) {
-      console.error('Error: File path could not be extracted');
-      return;
-    }
-    // Send the deletion request to Supabase
-    const { error } = await supabase.storage.from('songs').remove([filePath]);
+          if (!filePath) {
+            console.error('Error: File path could not be extracted');
+            return;
+          }
+          // Send the deletion request to Supabase
+          const { error } = await supabase.storage.from('songs').remove([filePath]);
 
-    if (error) {
-      console.error('Error deleting file from Supabase:', error.message);
-    } else {
-      console.log('File deletion request sent to Supabase successfully.');
-    }
-    // ✅ Verify by checking if the file still exists in Supabase
-    const { data: checkFile, error: checkError } = await supabase.storage.from('songs').list('');
+          if (error) {
+            console.error('Error deleting file from Supabase:', error.message);
+          } else {
+            console.log('File deletion request sent to Supabase successfully.');
+          }
+          // ✅ Verify by checking if the file still exists in Supabase
+          const { data: checkFile, error: checkError } = await supabase.storage.from('songs').list('');
 
-    if (checkError) {
-      console.error('Error checking file existence:', checkError.message);
-    } else {
-      const fileStillExists = checkFile.some((file) => file.name === filePath);
+          if (checkError) {
+            console.error('Error checking file existence:', checkError.message);
+          } else {
+            const fileStillExists = checkFile.some((file) => file.name === filePath);
 
-      if (fileStillExists) {
-        console.error('File still exists after deletion! Possible cache issue.');
-      } else {
-        console.log('File successfully deleted from Supabase.');
-      }
-    }
-    // Delete song metadata from Firebase (or other database) after successful deletion
-    const songRef = doc(songsCollection, this.song.docID);
-    await deleteDoc(songRef);
-    console.log('Song metadata deleted from Firebase successfully');
-  } catch (error) {
-    console.error('Error deleting song from Firebase and Supabase:', error);
-  }
+            if (fileStillExists) {
+              console.error('File still exists after deletion! Possible cache issue.');
+            } else {
+              console.log('File successfully deleted from Supabase.');
+            }
+          }
+          // Delete song metadata from Firebase (or other database) after successful deletion
+          const songRef = doc(songsCollection, this.song.docID);
+          await deleteDoc(songRef);
+          console.log('Song metadata deleted from Firebase successfully');
+        } catch (error) {
+          console.error('Error deleting song from Firebase and Supabase:', error);
+        }
 
-  this.removeSong(this.index);
-},
+        this.removeSong(this.index);
+      },
 
      },
 

@@ -135,8 +135,8 @@ export default {
         };
 
         try {
-         const songRef = await addDoc(songsCollection, song);
-          console.log('File metadata stored in Firebase:', songRef);
+          await addDoc(songsCollection, song);
+          console.log('File metadata stored in Firebase:', song);
            this.addSong(song);
         } catch (err) {
           console.error('Error storing song data in Firebase:', err ? err.message : 'Unknown error');
