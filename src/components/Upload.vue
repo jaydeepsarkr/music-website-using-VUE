@@ -64,6 +64,7 @@ export default {
       icon: '',
     };
   },
+  props: ['addSong'],
   methods: {
     simulateProgress(index) {
       const progressSteps = [20, 40, 60, 80, 100];
@@ -134,8 +135,9 @@ export default {
         };
 
         try {
-         await addDoc(songsCollection, song);
-          console.log('File metadata stored in Firebase:', song);
+         const songRef = await addDoc(songsCollection, song);
+          console.log('File metadata stored in Firebase:', songRef);
+           this.addSong(song);
         } catch (err) {
           console.error('Error storing song data in Firebase:', err ? err.message : 'Unknown error');
         }

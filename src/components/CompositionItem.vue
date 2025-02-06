@@ -45,8 +45,13 @@
 
 <script>
 import { songsCollection } from '@/includes/firebase';
-import { updateDoc, doc, deleteDoc } from 'firebase/firestore';
-// import supabase from '@/includes/supabase';
+import {
+   updateDoc,
+ doc,
+deleteDoc,
+
+ } from 'firebase/firestore';
+import supabase from '@/includes/supabase';
 
 export default {
   name: 'compositionItems',
@@ -61,6 +66,10 @@ export default {
     },
     index: {
       type: Number,
+      required: true,
+    },
+    removeSong: {
+      type: Function,
       required: true,
     },
   },
@@ -100,18 +109,50 @@ export default {
         this.alert_message = 'Song info updated successfully!';
       }
     },
-     async deleteSong() {
-        try {
-    // Delete song metadata from Firebase
+async deleteSong() {
+  try {
+    const songUrl = this.song.url;
+    const filePath = decodeURIComponent(songUrl.split('/storage/v1/object/public/')[1]);
+    console.log('Extracted file path:', filePath);
+
+    if (!filePath) {
+      console.error('Error: File path could not be extracted');
+      return;
+    }
+    // Send the deletion request to Supabase
+    const { error } = await supabase.storage.from('songs').remove([filePath]);
+
+    if (error) {
+      console.error('Error deleting file from Supabase:', error.message);
+    } else {
+      console.log('File deletion request sent to Supabase successfully.');
+    }
+    // ✅ Verify by checking if the file still exists in Supabase
+    const { data: checkFile, error: checkError } = await supabase.storage.from('songs').list('');
+
+    if (checkError) {
+      console.error('Error checking file existence:', checkError.message);
+    } else {
+      const fileStillExists = checkFile.some((file) => file.name === filePath);
+
+      if (fileStillExists) {
+        console.error('File still exists after deletion! Possible cache issue.');
+      } else {
+        console.log('File successfully deleted from Supabase.');
+      }
+    }
+    // Delete song metadata from Firebase (or other database) after successful deletion
     const songRef = doc(songsCollection, this.song.docID);
     await deleteDoc(songRef);
-
     console.log('Song metadata deleted from Firebase successfully');
   } catch (error) {
-    console.error('Error deleting song from Firebase:', error);
+    console.error('Error deleting song from Firebase and Supabase:', error);
   }
+
+  this.removeSong(this.index);
 },
+
      },
-  
+
 };
 </script>
