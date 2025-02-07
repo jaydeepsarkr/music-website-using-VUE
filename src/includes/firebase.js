@@ -17,10 +17,12 @@ const db = getFirestore(app);
 
 const usersCollection = collection(db, 'users');
 const songsCollection = collection(db, 'songs');
+const commentsCollection = collection(db, 'comments');
 export {
   app,
   auth,
   db,
   usersCollection,
   songsCollection,
+  commentsCollection,
 };
