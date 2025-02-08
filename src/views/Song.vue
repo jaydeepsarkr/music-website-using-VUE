@@ -21,7 +21,7 @@
   </section>
   <!-- Form -->
 <section class=" mx-auto mt-6 mb-3" id="comments">
-  <div class="bg-white rounded-lg border border-gray-200 shadow-lg overflow-hidden">
+  <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
     <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200 flex justify-between items-center">
       <!-- Comment Count -->
       <span class="text-lg font-semibold text-gray-700">
