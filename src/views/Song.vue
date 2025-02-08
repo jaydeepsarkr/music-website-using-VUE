@@ -1,5 +1,6 @@
 <!-- eslint-disable vuejs-accessibility/form-control-has-label -->
 <template>
+<main>
   <!-- Music Header -->
   <section class="w-full mb-8 py-14 text-center text-white relative">
     <div class="absolute inset-0 w-full h-full box-border bg-contain music-bg"
@@ -19,17 +20,19 @@
     </div>
   </section>
   <!-- Form -->
-  <section class="container mx-auto mt-6" id="comments">
-    <div class="bg-white rounded border border-gray-200 relative flex flex-col">
-      <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
-        <!-- Comment Count -->
-        <span class="card-title">Comments ({{song.comment_count}})</span>
-        <i class="fa fa-comments float-right text-green-400 text-2xl"></i>
-      </div>
-      <div class="p-6">
-       <div v-if="comment_show_alert" :class="[comment_alert_variant, 'text-white text-center font-bold p-4 mb-4']">
+<section class="container mx-auto mt-6 mb-3" id="comments">
+  <div class="bg-white rounded-lg border border-gray-200 shadow-lg overflow-hidden">
+    <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200 flex justify-between items-center">
+      <!-- Comment Count -->
+      <span class="text-lg font-semibold text-gray-700">
+        {{ $tc('song.comment_count', song.comment_count, { count: song.comment_count }) }}
+      </span>
+      <i class="fa fa-comments text-green-500 text-2xl"></i>
+    </div>
+    <div class="p-6">
+      <div v-if="comment_show_alert" :class="[comment_alert_variant, 'text-white text-center font-bold p-4 mb-4 rounded']">
         {{ comment_alert_message }}
-</div>
+      </div>
 
         <vee-form :validation-schema="schema" @submit="addComment" v-if="userLoggedIn">
           <vee-field as="textarea" name="comment"
@@ -63,6 +66,7 @@
       <p>{{comment.content}}</p>
     </li>
   </ul>
+  </main>
 </template>
 
 <script>

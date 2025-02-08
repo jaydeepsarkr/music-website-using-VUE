@@ -1,0 +1,15 @@
+{
+  "home": {
+    "listen": "Listen to Great Music!🎶"
+  },
+  "homeParagraph": {
+    "listen": "        Dive into the world of music with JAY-MUSIC,  where melodies come to life! Explore a vast collection of songs, albums, and playlists across various genres, from pop and rock to classical and indie. Whether you're searching for the latest hits, timeless classics, or hidden gems, we’ve got you covered."
+  },
+  "register": {
+    "TOS": "Terms of Service",
+    "accept": "I accpect Music's {0}"
+  },
+  "song": {
+    "comment_count": "No Comments | 1 Comment | {count} Comments"
+  }
+}

@@ -12,7 +12,7 @@
               <vee-field type="text" name="name"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Enter Name" :rule="{
+                placeholder="Enter your Name" :rule="{
                   required: true
                 }"/>
                 <ErrorMessage class="text-red-600" name="name"/>
@@ -23,13 +23,13 @@
               <vee-field type="email" name="email"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Enter Email"/>
+                placeholder="Enter your Email"/>
                 <ErrorMessage class="text-red-600"  name="email"/>
             </div>
             <!-- Age -->
             <div class="mb-3">
               <label class="inline-block mb-2" for="Age">Age</label>
-              <vee-field type="number" name="age"
+              <vee-field type="number" name="age"  placeholder="Enter your Age"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded" />
                    <ErrorMessage class="text-red-600"  name="age"/>
@@ -40,7 +40,7 @@
               <vee-field  name="password" :bails="false" v-slot="{field, errors}">
                 <input class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                               duration-500 focus:outline-none focus:border-black rounded"
-                              placeholder="Password" type="password" v-bind="field"/>
+                              placeholder="Enter your Password" type="password" v-bind="field"/>
                   <div class="text-red-600" v-for="error in errors" :key="error">{{ error }}</div>
               </vee-field>
                 <!-- <ErrorMessage class="text-red-600"  name="password"/> -->
@@ -71,7 +71,9 @@
             <div class="mb-3 pl-6">
               <vee-field type="checkbox" name="tos" value="1"
               class="w-4 h-4 float-left -ml-6 mt-1 rounded inline-block" />
-               <label class="inline-block" for="Accept terms of service">Accept terms of service</label>
+               <i18n-t class="inline-block" for="Accept terms of service" keypath="register.accept" tag="label">
+                <a href="#" class="text-purple-600">{{ $t('register.TOS') }}</a>
+               </i18n-t>
                 <ErrorMessage class="text-red-600 block"  name="tos"/>
             </div>
             <button type="submit" :disabled="reg_in_submission"
