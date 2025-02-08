@@ -1,48 +1,71 @@
+<!-- eslint-disable no-alert -->
 <template>
-            <!-- Composition Items -->
-            <div class="border border-gray-200 p-3 mb-4 rounded">
-              <div v-show="!showForm">
-                <h4 class="inline-block text-2xl font-bold">{{song.modified_name}}</h4>
-                <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right" @click.prevent="deleteSong">
-                  <i class="fa fa-times"></i>
-                </button>
-                <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-blue-600 float-right" @click.prevent="showForm = !showForm">
-                  <i class="fa fa-pencil-alt"></i>
-                </button>
-              </div>
-              <div v-show="showForm">
-                <div class="text-black text-center font-bold p-4 mb-4" v-if="show_alert"
-                :class="alert_variant">
-                      {{ alert_message}}
-                </div>
-                <vee-form :validation-schema="schema" :initial-values="song" @submit="edit">
-                  <div class="mb-3">
-                    <label class="inline-block mb-2">Song Title</label>
-                    <vee-field type="text" name="modified_name"
-                      class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300
-                        transition duration-500 focus:outline-none focus:border-black rounded"
-                      placeholder="Enter Song Title"
-                      @input="updateUnsavedFlag(true)"/>
-                      <ErrorMessage class="text-red-600"  name="modified_name"/>
-                  </div>
-                  <div class="mb-3">
-                    <label class="inline-block mb-2">Genre</label>
-                    <vee-field type="text" name="genre"
-                      class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300
-                        transition duration-500 focus:outline-none focus:border-black rounded"
-                      placeholder="Enter Genre"
-                       @input="updateUnsavedFlag(true)" />
-                      <ErrorMessage class="text-red-600" name="genre"/>
-                  </div>
-                  <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600" :disabled="in_submission">
-                    Submit
-                  </button>
-                  <button type="button" class="py-1.5 px-3 rounded text-white bg-gray-600 ml-2" :disabled="in_submission" @click.prevent="showForm = false">
-                    Go Back
-                  </button>
-                </vee-form>
-              </div>
-            </div>
+  <!-- Composition Items -->
+  <div class="border border-gray-200 p-4 mb-4 rounded-lg shadow-md bg-white transition duration-300 hover:shadow-lg">
+    <!-- Display Song Details -->
+    <div v-show="!showForm" class="flex justify-between items-center">
+      <h4 class="text-2xl font-bold text-gray-700">{{ song.modified_name }}</h4>
+      <div>
+        <!-- Edit Button -->
+        <button class="py-1.5 px-3 text-sm rounded-md text-white bg-blue-600 hover:bg-blue-700 transition"
+          @click.prevent="showForm = !showForm">
+          <i class="fa fa-pencil-alt"></i>
+        </button>
+        <!-- Delete Button -->
+        <button class="py-1.5 px-3 text-sm rounded-md text-white bg-red-600 hover:bg-red-700 transition ml-2"
+          @click.prevent="deleteSong">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div v-show="showForm">
+      <!-- Alert Message -->
+      <div v-if="show_alert" class="text-white text-center font-bold p-4 mb-4 rounded-md" :class="alert_variant">
+        {{ alert_message }}
+      </div>
+
+      <vee-form :validation-schema="schema" :initial-values="song" @submit="edit">
+        <!-- Song Title -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-600 mb-2">Song Title</label>
+          <vee-field type="text" name="modified_name"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-800
+              focus:outline-none focus:ring-2 focus:ring-black transition"
+            placeholder="Enter Song Title"
+            @input="updateUnsavedFlag(true)" />
+          <ErrorMessage class="text-red-600 text-sm mt-1" name="modified_name" />
+        </div>
+
+        <!-- Genre -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-600 mb-2">Genre</label>
+          <vee-field type="text" name="genre"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-800
+              focus:outline-none focus:ring-2 focus:ring-black transition"
+            placeholder="Enter Genre"
+            @input="updateUnsavedFlag(true)" />
+          <ErrorMessage class="text-red-600 text-sm mt-1" name="genre" />
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-3 mt-4">
+          <button type="submit"
+            class="py-2 px-4 rounded-md text-white bg-green-600 hover:bg-green-700 transition disabled:opacity-50"
+            :disabled="in_submission">
+            Submit
+          </button>
+          <button type="button"
+            class="py-2 px-4 rounded-md text-white bg-gray-600 hover:bg-gray-700 transition"
+            :disabled="in_submission"
+            @click.prevent="showForm = false">
+            Go Back
+          </button>
+        </div>
+      </vee-form>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -116,6 +139,11 @@ export default {
       }
     },
       async deleteSong() {
+          const confirmation = window.confirm('Are you sure you want to delete this song? This action cannot be undone.');
+
+  if (!confirmation) {
+    return;
+  }
         try {
           const songUrl = this.song.url;
           const filePath = decodeURIComponent(songUrl.split('/storage/v1/object/public/')[1]);

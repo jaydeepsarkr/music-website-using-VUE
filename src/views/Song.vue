@@ -20,7 +20,7 @@
     </div>
   </section>
   <!-- Form -->
-<section class="container mx-auto mt-6 mb-3" id="comments">
+<section class=" mx-auto mt-6 mb-3" id="comments">
   <div class="bg-white rounded-lg border border-gray-200 shadow-lg overflow-hidden">
     <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200 flex justify-between items-center">
       <!-- Comment Count -->
@@ -132,7 +132,8 @@ export default {
 
         const comment = {
             content: values.comment,
-            datePosted: new Date().toString(),
+            datePosted: new Date().toString().split(' ').slice(1, 4)
+            .join(' '),
             sid: this.$route.params.id,
             user: auth.currentUser.displayName,
             uid: auth.currentUser.uid,

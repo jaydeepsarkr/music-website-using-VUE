@@ -3,7 +3,10 @@
     "listen": "Listen to Great Music!🎶"
   },
   "homeParagraph": {
-    "listen": "        Dive into the world of music with JAY-MUSIC,  where melodies come to life! Explore a vast collection of songs, albums, and playlists across various genres, from pop and rock to classical and indie. Whether you're searching for the latest hits, timeless classics, or hidden gems, we’ve got you covered."
+    "listen": "        Dive into the world of music with MusicVibe,  where melodies come to life! Explore a vast collection of songs, albums, and playlists across various genres, from pop and rock to classical and indie. Whether you're searching for the latest hits, timeless classics, or hidden gems, we’ve got you covered."
+  },
+  "manage": {
+    "my_songs": "My Songs"
   },
   "register": {
     "TOS": "Terms of Service",

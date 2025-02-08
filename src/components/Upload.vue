@@ -86,6 +86,10 @@ export default {
           console.log('Only MP3 files are allowed.', ` ${fileIndex + 1} is not a valid file type`);
           return;
         }
+        if (!navigator.onLine) {
+        alert('Make sure you are connected to the internet');
+        return;
+    }
 
         // Add file to the uploads array
         const fileData = { name: file.name, progress: 0 };
