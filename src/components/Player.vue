@@ -14,20 +14,20 @@
       </div>
       <!-- Scrub -->
       <div class="float-left w-7 h-7 leading-3 ml-7 mt-2 player-scrub">
-        <div class="absolute left-0 right-0 text-lg text-center mx-auto player-song-info"
+        <div class="absolute left-0 right-0 text-lg text-center mx-auto player-song-info text-gray-800 font-semibold"
         v-if="currentSong.modified_name">
-          <span class="song-title">{{currentSong.modified_name}} -</span>
-          <span class="song-artist">(Uploaded by {{currentSong.display_name}})</span>
+          <span class="song-title text-green-600">{{currentSong.modified_name}} -</span>
+          <span class="song-artist text-gray-600">(Uploaded by {{currentSong.display_name}})</span>
         </div>
         <!-- Scrub Container  -->
-        <span class="block w-full h-2 rounded m-1 mt-2 bg-gray-200 relative cursor-pointer"
+        <span class="block w-full h-2 rounded-lg m-1 mt-2 bg-gray-300 shadow-inner relative cursor-pointer transition-all duration-300"
         @click.prevent="updateSeek($event)" @keydown.space="toggleAudio">
           <!-- Player Ball -->
-          <span class="absolute top-neg-8 text-gray-800 text-lg" :style="{ left: playerProgress }">
-            <i class="fas fa-circle"></i>
+          <span class="absolute -top-3 text-gray-800 text-lg" :style="{ left: playerProgress }">
+            <i class="fas fa-circle shadow-md "></i>
           </span>
           <!-- Player Progress Bar-->
-          <span class="block h-2 rounded bg-gradient-to-r from-green-500 to-green-400"
+          <span class="block h-2 rounded-lg bg-gradient-to-r from-green-500 to-green-400 shadow-lg transition-all duration-500 ease-in-out"
            :style="{ width: playerProgress }"></span>
         </span>
       </div>
