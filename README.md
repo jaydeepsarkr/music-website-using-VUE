@@ -1,34 +1,14 @@
-# music-webpage
+Jay Music Website 🎵
+Jay Music Website is a stylish and interactive music streaming platform built with modern web technologies. This project offers a seamless music listening experience with a visually engaging UI.
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Run your unit tests
-```
-yarn test:unit
-```
-
-### Run your end-to-end tests
-```
-yarn test:e2e
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Features
+🎶 Stream Music – Play your favorite songs with a smooth and responsive player.
+🎨 Attractive UI – A beautifully designed interface with engaging animations.
+📱 Fully Responsive – Optimized for desktop and mobile devices.
+🎵 Music Library – Explore a collection of songs and playlists.
+🔍 Search & Discover – Easily find tracks and artists.
+Technologies Used
+Frontend: React.js
+Styling: CSS, TailwindCSS
+Hosting: Netlify
+👉 Live Demo: Jay Music Website
